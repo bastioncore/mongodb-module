@@ -24,6 +24,7 @@ class MongoDbSink extends AbstractSink{
     void onReceive(def message){
         super.onReceive(message)
         if(message instanceof Configuration){
+            debug('configuring MongoDB')
             def servers = []
             configuration.configuration.servers.each {
                 servers.add(new ServerAddress(it.host,it.port))
@@ -36,6 +37,7 @@ class MongoDbSink extends AbstractSink{
 
     @Override
     DefaultMessage process(DefaultMessage defaultMessage) {
+        debug('Processing document')
         Document doc = new Document(defaultMessage.getContent())
         collection.insertOne(doc)
         return defaultMessage
