@@ -1,6 +1,7 @@
 package io.bastioncore.modules.mongodb
 
 import com.mongodb.MongoClient
+import com.mongodb.MongoCredential
 import com.mongodb.ServerAddress
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
@@ -29,16 +30,13 @@ class MongoDbScheduledEntry extends AbstractScheduledEntry {
         super.onReceive(message)
         if(message instanceof Configuration){
             debug('configuring MongoDB')
-            def servers = []
-            configuration.configuration.servers.each {
-                servers.add(new ServerAddress(it.host,it.port))
-            }
-            mongoClient = new MongoClient(servers)
+            mongoClient = MongoDbUtil.buildClient(configuration.configuration)
             database = mongoClient.getDatabase(configuration.configuration.database)
             collection = database.getCollection(configuration.configuration.collection)
             field = configuration.configuration.field
             query = BGroovy.instance.parseTemplate(configuration.configuration.query)
             state = configuration.configuration.state
+
         }
 
     }

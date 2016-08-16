@@ -25,11 +25,7 @@ class MongoDbSink extends AbstractSink{
         super.onReceive(message)
         if(message instanceof Configuration){
             debug('configuring MongoDB')
-            def servers = []
-            configuration.configuration.servers.each {
-                servers.add(new ServerAddress(it.host,it.port))
-            }
-            mongoClient = new MongoClient(servers)
+            mongoClient = MongoDbUtil.buildClient(configuration.configuration)
             database = mongoClient.getDatabase(configuration.configuration.database)
             collection = database.getCollection(configuration.configuration.collection)
         }
