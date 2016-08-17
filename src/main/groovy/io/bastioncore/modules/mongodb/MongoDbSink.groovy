@@ -34,7 +34,12 @@ class MongoDbSink extends AbstractSink{
     @Override
     DefaultMessage process(DefaultMessage defaultMessage) {
         debug('Processing document')
-        Document doc = new Document(defaultMessage.getContent())
+        def content = defaultMessage.getContent()
+        Document doc
+        if(content instanceof Map)
+            doc = new Document(content)
+        if(content instanceof String)
+            doc = Document.parse(content)
         collection.insertOne(doc)
         return defaultMessage
     }
