@@ -16,7 +16,7 @@ class MongoDbUtil {
         }
         def opts = []
         if(configuration.authentication){
-            opts.add(MongoCredential.createCredential(configuration.authentication.username, configuration.authentication.database, configuration.authentication.password))
+            opts.add(MongoCredential.createCredential(configuration.authentication.username, configuration.authentication.database, configuration.authentication.password.toCharArray()))
         }
         return new MongoClient(servers,opts)
     }
